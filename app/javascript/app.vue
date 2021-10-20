@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>NotToDoリスト</h1>
+  <h1>"NOT"ToDo-App</h1>
   <div>
     <router-view></router-view>
   </div>
@@ -16,7 +16,8 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      component: ListIndexPage
+      name: "ListIndexPage",
+      component: ListIndexPage,
     }
   ]
 })
@@ -32,5 +33,11 @@ export default {
 p {
   font-size: 2em;
   text-align: center;
+}
+
+h1{
+  text-align: center;
+  color: #2F4F4F;
+  font-weight: bolder;
 }
 </style>
