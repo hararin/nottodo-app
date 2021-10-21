@@ -11,7 +11,8 @@
           <b-button variant="outline-success" @click="openModal"><font-awesome-icon icon="edit" /></b-button>
           <input-form @close="closeModal" v-if="modal" :PageTitle="title" :list="list" @submit="updateItem">
           </input-form>
-          <b-button variant="outline-danger"><font-awesome-icon icon="trash-alt" /></b-button>
+          <b-button variant="outline-danger" @click="openConfirm"><font-awesome-icon icon="trash-alt" /></b-button>
+          <confirm-modal v-if="confirm" @close="closeConfirm" :PageTitle="confirmation" @ok="deleteItem"></confirm-modal>
         </b-button-group>
       </div>
     </div>
@@ -24,25 +25,24 @@
 <script>
   import axios from 'axios';
   import InputForm from '../modals/InputForm.vue'
+  import ConfirmModal from '../modals/ConfirmModal.vue'
   export default {
     props: {
       list: {},
       errors: ''
     },
     components: {
-      InputForm
+      InputForm,
+      ConfirmModal
     },
     data() {
       return {
         title: "Edit Item",
+        confirmation: "Delete Item",
         detail: false,
-        modal: false
+        modal: false,
+        confirm: false
       }
-    },
-    mounted () {
-      axios
-        .get(`/api/lists/${this.$route.params.id}.json`)
-        .then(response => (this.list = response.data))
     },
     methods: {
       showDetail() {
@@ -57,17 +57,32 @@
       closeModal() {
         this.modal = false
       },
+      openConfirm() {
+        this.confirm = true
+      },
+      closeConfirm() {
+        this.confirm = false
+      },
       updateItem: function() {
         axios
           .patch(`/api/lists/${this.list.id}`, this.list)
           .then(response => {
-            this.$router.push({ name: 'ListIndexPage' });
+            this.$router.go({ name: 'ListIndexPage' });
+            this.closeModal();
           })
           .catch(error => {
             console.error(error);
             if (error.response.data && error.response.data.errors) {
               this.errors = error.response.data.errors;
             }
+          })
+      },
+      deleteItem: function() {
+        axios
+          .delete(`/api/lists/${this.list.id}`, this.list)
+          .then(response => {
+            this.$router.go({ name: 'ListIndexPage' });
+            this.closeConfirm();
           })
       }
     }

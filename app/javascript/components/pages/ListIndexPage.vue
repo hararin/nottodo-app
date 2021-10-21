@@ -30,7 +30,7 @@ export default {
   data: function () {
     return {
       title: "New List",
-      lists: [],
+      lists: {},
       modal: false,
       list: {
         content: "",
@@ -55,9 +55,8 @@ export default {
       axios
         .post('/api/lists', this.list)
         .then(response => {
-          this.$router.push({
-            name: 'ListIndexPage'
-          })
+          this.$router.go({ name: 'ListIndexPage' });
+          this.closeModal();
         })
         .catch(error => {
           console.error(error);
