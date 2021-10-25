@@ -1,31 +1,23 @@
 <template>
   <div>
     <div class="button-wrapper">
-      <b-button pill variant="outline-primary" @click="openModal">Add Item</b-button>
+      <b-button pill variant="outline-primary" @click="switchModal">Add Item</b-button>
     </div>
-    <input-form @close="closeModal" v-if="modal" :PageTitle="title" :list="list" @submit="createItem">
+    <input-form @close="switchModal" v-if="modal" :PageTitle="title" :list="list" @submit="createItem">
     </input-form>
-    <div class="list-item-wrapper">
-      <h3>NotToDoLists</h3>
-      <div>
-        <b-list-group>
-          <b-list-group-item v-for="list in lists" :key="list.id">
-            <list-detail :list="list"></list-detail>
-          </b-list-group-item>
-        </b-list-group>
-      </div>
-    </div>
+    <wrapper :lists="lists">NotToDoLists</wrapper>
+    <wrapper :lists="lists">CompletedLists</wrapper>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import InputForm from '../modules/modals/InputForm.vue'
-import ListDetail from '../modules/child/ListDetail.vue'
+import Wrapper from '../modules/lists/Wrapper.vue'
 export default {
   components: {
     InputForm,
-    ListDetail
+    Wrapper
   },
   data: function () {
     return {
@@ -44,12 +36,16 @@ export default {
       .get('api/lists.json')
       .then(response => (this.lists = response.data))
   },
+  // computed: {
+  //   completedLists: function() {
+  //     return this.lists.filter(function (list) {
+  //       return list.period < new Date()
+  //     })
+  //   }
+  // },
   methods: {
-    openModal() {
+    switchModal() {
       this.modal = !this.modal
-    },
-    closeModal() {
-      this.modal = false
     },
     createItem: function() {
       axios
@@ -69,12 +65,6 @@ export default {
 <style scoped>
 .button-wrapper {
   text-align: center;
-}
-.list-item-wrapper {
-  margin-top: 20px;
-  margin: 0 auto;
-  width: 80%;
-  max-width: 600px;
 }
 h3 {
   color: #2F4F4F;

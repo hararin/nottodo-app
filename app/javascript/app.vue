@@ -30,6 +30,9 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  margin: 20px;
+}
 p {
   font-size: 2em;
   text-align: center;

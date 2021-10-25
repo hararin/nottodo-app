@@ -1,29 +1,32 @@
 <template>
   <div v-on:mouseover="showDetail" v-on:mouseleave="hideDetail" class="list-item">
-    <div class="d-flex justify-content-between align-items-center">
-      <div>
-        <strong>{{ list.content }}</strong>
-        <b-badge v-if="list.period" variant="primary" pill>{{ list.period }}</b-badge>
-        <b-badge v-else variant="info" pill>forever</b-badge>
-      </div>
-      <div>
-        <b-button-group>
-          <b-button variant="outline-success" @click="openModal"><font-awesome-icon icon="edit" /></b-button>
-          <input-form @close="closeModal" v-if="modal" :PageTitle="title" :list="list" @submit="updateItem">
-          </input-form>
-          <b-button variant="outline-danger" @click="openConfirm"><font-awesome-icon icon="trash-alt" /></b-button>
-          <confirm-modal v-if="confirm" @close="closeConfirm" :PageTitle="confirmation" @ok="deleteItem"></confirm-modal>
-        </b-button-group>
-      </div>
+    <div>
+      <strong>{{ list.content }}</strong>
     </div>
     <div v-if="detail" class="d-flex-none">
-      {{ list.detail }}
+      <div style="white-space: pre-line;">
+        {{ list.detail }}
+      </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <b-badge v-if="list.period" variant="info">{{ format(new Date(list.created_at), 'yyyy-MM-dd') }}~{{ list.period }}</b-badge>
+          <b-badge v-else variant="info">{{ format(new Date(list.created_at), 'yyyy-MM-dd') }}~forever</b-badge>
+        </div>
+        <b-button-group>
+          <b-button variant="outline-success" @click="switchModal"><font-awesome-icon icon="edit" /></b-button>
+          <input-form @close="switchModal" v-if="modal" :PageTitle="title" :list="list" @submit="updateItem">
+          </input-form>
+          <b-button variant="outline-danger" @click="switchConfirm"><font-awesome-icon icon="trash-alt" /></b-button>
+          <confirm-modal v-if="confirm" @close="switchConfirm" :PageTitle="confirmation" @ok="deleteItem"></confirm-modal>
+        </b-button-group>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   import axios from 'axios';
+  import { format } from 'date-fns'
   import InputForm from '../modals/InputForm.vue'
   import ConfirmModal from '../modals/ConfirmModal.vue'
   export default {
@@ -41,7 +44,8 @@
         confirmation: "Delete Item",
         detail: false,
         modal: false,
-        confirm: false
+        confirm: false,
+        format
       }
     },
     methods: {
@@ -51,17 +55,11 @@
       hideDetail() {
         this.detail = false
       },
-      openModal() {
-        this.modal = true
+      switchModal() {
+        this.modal = !this.modal
       },
-      closeModal() {
-        this.modal = false
-      },
-      openConfirm() {
-        this.confirm = true
-      },
-      closeConfirm() {
-        this.confirm = false
+      switchConfirm() {
+        this.confirm = !this.confirm
       },
       updateItem: function() {
         axios
@@ -72,9 +70,6 @@
           })
           .catch(error => {
             console.error(error);
-            if (error.response.data && error.response.data.errors) {
-              this.errors = error.response.data.errors;
-            }
           })
       },
       deleteItem: function() {
