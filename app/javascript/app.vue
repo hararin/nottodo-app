@@ -9,8 +9,9 @@
 
 <script>
 import Vue from 'vue';
-import VueRouter from 'vue-router'
-import ListIndexPage from 'components/pages/ListIndexPage.vue'
+import VueRouter from 'vue-router';
+import VueCarousel from 'vue-carousel';
+import ListIndexPage from 'components/pages/ListIndexPage.vue';
 
 const router = new VueRouter({
   routes: [
@@ -22,7 +23,9 @@ const router = new VueRouter({
   ]
 })
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+Vue.use(VueCarousel);
+
 
 export default {
   router

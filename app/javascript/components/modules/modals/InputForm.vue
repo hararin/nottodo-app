@@ -2,7 +2,7 @@
   <div id="overlay" @click.self="$emit('close')">
     <div id="form">
       <b-form @submit.prevent="$emit('submit')">
-        <h5>{{ PageTitle }}</h5>
+        <h5><slot></slot></h5>
         <b-form-group
           id="input-group-1"
           label="title"
@@ -37,6 +37,7 @@
           <b-form-datepicker
             id="input-3"
             v-model="list.period"
+            :min="min"
             type="date"
             placeholder="No date selected"
           ></b-form-datepicker>
@@ -52,8 +53,14 @@
 <script>
   export default {
     props: {
-      list: {},
-      PageTitle: ""
+      list: {}
+    },
+    data() {
+      const minDate = new Date()
+      minDate.setDate(minDate.getDate() + 1)
+      return {
+        min: minDate
+      }
     }
   }
 </script>
@@ -79,6 +86,7 @@ h5 {
   width: 50%;
   padding: 1em;
   background: #fff;
+  color: #2F4F4F;
 }
 .button-wrapper {
   text-align: center;

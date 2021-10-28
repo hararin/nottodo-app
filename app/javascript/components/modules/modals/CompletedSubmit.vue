@@ -1,25 +1,39 @@
 <template>
-  <div id="overlay" @click.self="$emit('close')">
+  <div id="overlay">
     <div id="modal">
-      <div>
+      <loading v-if="spinnerState" v-on="stopSpinner()"></loading>
+      <div v-else>
         <h5><slot></slot></h5>
-        <p>Are you sure you want to delete this item?</p>
         <div class="button-wrapper">
-          <b-button @click="$emit('close')" variant="outline-dark">No</b-button>
-          <b-button @click="$emit('ok')" variant="outline-danger">Yes</b-button>
+          <b-button @click="$emit('ok')" pill variant="outline-success">got it!</b-button>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
+  import Loading from '../modals/Loading.vue'
   export default {
+    components: {
+      Loading
+    },
+    data() {
+      return {
+        spinnerState: true
+      }
+    },
+    methods: {
+      stopSpinner() {
+        setTimeout(() => {
+          this.spinnerState = false;
+        }, 2000);
+      }
+    }
   }
 </script>
 
-<style>
+<style scoped>
 #overlay {
   display: flex;
   align-items: center;
@@ -40,8 +54,12 @@
 }
   h5 {
     text-align: center;
+    color: #2F4F4F;
   }
   .button-wrapper {
     text-align: center;
   }
+.spinner {
+  text-align: center;
+}
 </style>

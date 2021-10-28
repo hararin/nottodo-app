@@ -3,7 +3,7 @@
     <h3><slot></slot></h3>
     <div>
       <b-list-group>
-        <b-list-group-item v-for="list in lists" :key="list.id">
+        <b-list-group-item v-for="list in lists" :key="list.id" class="list-item">
           <detail :list="list"></detail>
         </b-list-group-item>
       </b-list-group>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Detail from 'Detail.vue'
+import Detail from '../lists/Detail.vue'
 export default {
   props: {
     lists: {}
@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 h3 {
   color: #2F4F4F;
   border-bottom: 2px solid #2F4F4F;
@@ -33,5 +33,9 @@ h3 {
   margin: 0 auto;
   width: 80%;
   max-width: 600px;
+}
+.list-item {
+  background-color: #f8f8f8;
+  color: #333;
 }
 </style>
